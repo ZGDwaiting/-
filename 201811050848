@@ -1,1 +1,911 @@
+1.合并函数
 
+指针型：
+#include "stdio.h"
+void fun(int a, int b, long *c)     
+{ 
+    *c=a/10%10*10+a%10*1000+b/10+b%10*100;
+   }    
+void main()     
+{   
+  int a,b;
+  long c;     
+  printf("Input a, b:"); 
+  scanf("%d%d", &a, &b);  
+  fun(a, b, &c);     
+  printf("The result is: %ld\n", c);   
+}   
+
+返回值：
+#include <stdio.h>
+int fun(int a,int b)
+{
+	int c;
+	c=a/10*10+a%10*1000+b/10+b%10*100;
+	return c;
+}
+int main()
+{
+	int m,n,c;
+	scanf("%d%d",&m,&n);
+	c=fun(m,n);
+	printf("%d",c);
+}
+
+引用参数：
+#include<stdio.h>
+int main()
+{
+    int fun(int a,int b);
+    int a,b,c;
+    printf("Please enter a:\n");
+    scanf("%d",&a);  //接收正整数a
+    printf("Please enter b:\n");
+    scanf("%d",&b);  //接收正整数b
+    c=fun(a,b);
+    printf("The number c is %d",c);  //输出正整数c
+    return 0;
+}
+
+int fun(int a,int b)
+{
+    int c1,c2,c3,c4;  //c1、c2、c3、c4分别对应c的千位、百位、十位、个位
+    c1=a%10;
+    c2=b/10;
+    c3=a/10;
+    c4=b%10;
+    return (c1*1000+c2*100+c3*10+c4);
+}
+
+2.猴子选大王
+
+
+数组：
+#include<stdio.h>
+int main()
+{
+	int m,n,number,count=1;		//number记猴子剩余个数，count记当前报数
+	int monkey[999];
+	int t;						//t记数组下标
+	int i;
+	printf("请输入猴子个数 m 和报数 n ：");
+	scanf("%d%d",&m,&n);
+	number = m;
+	for(i=0;i<m;i++)
+		monkey[i]=i+1;
+	t=0;
+	while(number>1)
+	{
+		if(monkey[t]>0)
+		{
+			if(count!=n)
+			{
+				count++;
+				t=(t+1)%m;		//t=(t+1)%m实现数组下标加1
+			}
+			else
+			{
+				monkey[t]=0;
+				count=1;
+				number--;
+				t=(t+1)%m;
+			}
+		}
+		else
+		{
+			t=(t+1)%m;
+		}
+	}
+	for(i=0;i<m;i++)
+	{
+		if(monkey[i]>0)
+			printf("猴子大王：%d\n",monkey[i]);
+	}
+	return 0;
+}
+
+链表：
+#include <stdio.h>
+#include <stdlib.h>
+struct num
+{
+    int number;
+    struct num *next;
+};
+int getnumber(int m,int n);
+int getnumber1(int m,int n);
+int main()
+{
+    int m,n;
+    scanf("%d%d",&m,&n);
+    printf("循环链表：猴王编号为:%d\n\n\n",getnumber(m,n));
+    printf("单向链表：猴王编号为:%d\n",getnumber1(m,n));
+    return 0;
+}
+int getnumber(int m,int n)
+{
+    struct num *p,*p1,*head,*temp;
+    int i=0,flag;
+    p=(struct num*)malloc(sizeof(struct num));
+    head=p;
+    while(i<m)
+    {
+        p1=p;
+        p->number=i+1;
+        p=(struct num*)malloc(sizeof(struct num));
+        p1->next=p;
+        i++;
+    }
+    p1->next=head;     //形成环状列表
+    free(p);
+    temp=p1; //temp当前指针的前驱
+    i=1;
+    while(i<m)
+    {
+        flag=1;     //计数器
+        //查找要删除的编号的指针
+        while(flag<n)
+        {
+            temp=head;
+            head=head->next;
+            flag++;
+        }
+        temp->next=head->next;
+        printf("删除猴子的编号:%d\n",head->number);
+        free(head);
+        head=temp->next;
+        i++;
+    }
+    return head->number;
+}
+
+
+int getnumber1(int m,int n)
+{
+    struct num *p,*p1,*head,*temp;
+    int i=0,flag;
+    p=(struct num*)malloc(sizeof(struct num));
+    head=p;
+    if(n==1)
+        return m;
+    while(i<m)
+    {
+        p1=p;
+        p->number=i+1;
+        p=(struct num*)malloc(sizeof(struct num));
+        p1->next=p;
+        i++;
+    }
+    p1->next=NULL;   //形成单向链表
+    p=head;
+    i=0;
+    flag=0;
+    while(i!=m-1)
+    {
+        if(flag==n-1)
+        {
+            printf("删除猴子的编号:%d\n",p->number);
+            if(p==head)   //当删除的节点位于节点头时
+            {
+                head=head->next;
+                p=head;
+            }
+            else if(p->next==NULL) //当初节点位于节点尾时
+            {
+                temp->next=NULL;
+                p=head;
+            }
+            else                   //位于中间
+            {
+                temp->next=p->next;
+                p=p->next;
+            }
+            i++;
+            flag=0;
+        }
+
+      //当指针到达链表尾部是，使其指向头指针。
+
+        if(p->next==NULL)
+        {
+            p=head;
+        }
+        else
+        {
+            temp=p;
+            p=p->next;
+        }
+        flag++;
+    }
+    return head->number;
+}
+
+
+3.奖学金
+
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct Student{
+    int snum;
+    char score[10];
+    int sum;
+}Student;
+int main(){
+    int n;
+    scanf("%d",&n);
+    Student a[128];   
+    int i,j;
+    for(i=0;i<n;i++){
+        a[i].snum = i+1;
+        a[i].sum = 0;
+        for(j=0;j<3;j++){
+            scanf("%d",&a[i].score[j]);
+            a[i].sum += a[i].score[j];
+        }
+    }
+    Student tmp;
+    for(j=n-1;j>0;j--){
+        for(i=0;i<j;i++){
+            if(a[i].sum < a[i+1].sum){
+                tmp = a[i];
+                a[i] = a[i+1];
+                a[i+1] = tmp;  
+            }
+            else if(a[i].sum==a[i+1].sum){
+                if(a[i].score[0] < a[i+1].score[0]){
+                    tmp = a[i];
+                    a[i] = a[i+1];
+                    a[i+1] = tmp; 
+                }    
+            }
+        }
+    }
+    for(i=0;i<5;i++){
+        printf("%d %d\n",a[i].snum,a[i].sum);
+    }
+    system("pause");
+    return 0;
+}
+
+
+4.字符串问题
+
+#include<iostream>
+using namespace std;
+int main() {
+    int r, c,x,y=0;
+	int i=0,j=0;
+    char grid[50][51],hrid[50][51];
+    cin >> r>>c ;
+    for ( i = 0; i < c; i++)
+        cin >> grid[i];
+	cin>>x;
+	   for (i = 0; i < c; i++)
+    {
+        for ( j = 0; j < r; j++)
+        hrid[i][j]=grid[i][j];
+    }
+    
+	   for(y=0;y<x;y++)
+	{
+   for (i = 0; i < c; i++)
+   {     for(j=0;j<r;j++)
+                
+   {           if(grid[i][j]=='X')
+   {             hrid[i-1][j]='X';
+                 hrid[i][j-1]='X';
+				 hrid[i][j+1]='X';
+                 hrid[i+1][j]='X';
+			if(grid[i-1][j]=='P')
+				 hrid[i-1][j]='P';
+			if(grid[i][j-1]=='P')
+				 hrid[i][j-1]='P';
+			if(grid[i][j+1]=='P')
+                 hrid[i][j+1]='P';
+            if(grid[i+1][j]=='P')
+				hrid[i+1][j]='P';
+
+
+   }
+   }
+   }
+
+   	   for (i = 0; i < c; i++)
+    {
+        for ( j = 0; j < r; j++)
+        grid[i][j]=hrid[i][j];
+    }
+	}
+       for (i = 0; i < c; i++)
+    {
+        for ( j = 0; j < r; j++)
+        cout<<hrid[i][j];
+		cout<<endl;
+    }
+    return 1;
+ 
+}
+   ;
+
+
+5.多项式计算器
+
+#include<iostream>
+#include<stdlib.h>//包含atoi()和itoa()函数
+using namespace std;
+#define MAX 50
+#define NULL 0
+typedef struct //运算符栈
+{
+    char arr[MAX];
+    int top;
+}OPTR;
+typedef struct //操作数栈
+{
+    int arr[MAX];
+    int top;
+}OPND;
+class A
+{
+public:
+    A();//构造函数
+
+    void load();//依次读入每个字符
+    void Create();
+
+    int Empty(OPTR *optr);//判空
+    int Empty(OPND *opnd);//判空
+
+    void Push(char ch);//运算符入栈
+    void Push(int num);//操作数入栈
+
+    int Pop(char *ch);//运算符出栈
+    int Pop(int *num);//操作数出栈
+
+    int bijiao(char ch);//比较算符优先级，确定是否计算
+    int jisuan(int a , int b , char ch);//计算
+
+    int get_opnd_top();//返回运算符的栈顶元素（结果数值）
+
+    int pankong();//判断运算符是否结束
+private:
+    char ARR[100] ;
+    OPTR *optr;
+    OPND *opnd; 
+    int flag;
+};
+///////////////////////////构造函数/////////////////////////
+A::A()
+{
+    flag = 0;
+    optr = NULL;
+    opnd = NULL;
+    cout<<"输入计算的表达式：";
+    cin>>ARR;
+}
+///////////////////////////析构函数///////////////////////
+//A::~A()
+//{
+//  delete []ARR ;
+//  delete optr ;
+//  delete opnd;
+//}
+
+///////////////////////////依次读入每个字符////////////////
+void A::load()
+{
+    int  a = 0 , b = 0 ,length = strlen(ARR) ;
+    char arr[10] = {0} , ch ; 
+    for (int i = 0 ; i < length; )
+    {   
+        i = flag; 
+        if (pankong()){ break;}
+        if (ARR[i] =='+'||ARR[i] =='-'||ARR[i] =='*'||ARR[i] =='/'||ARR[i] =='('||ARR[i] ==')'||ARR[i] =='=')//是运算符;
+        {
+            int n = bijiao(ARR[i]);//取得比较返回值
+            switch (n)
+            {
+            case 1:{    Push(ARR[i]);flag++;}break;//继续入栈，flag++读取下一个位置
+            case 0:{    Pop(&ch); ch = 0 ; flag++;}break;//')'遇到'('，把'('出栈，flag++读取下一个位置
+            case -1:{                                       //进行计算
+                            a = Pop(&a);
+                            b = Pop(&b);
+                            ch = Pop(&ch);
+                            Push(jisuan(b , a , ch));//计算结果入栈
+                    }break;
+            }
+        }
+        else    //是字符数
+        {
+            for (int j = 0 ; i < strlen(ARR) - 1;)
+            {
+                if (ARR[i] !='+'&&ARR[i] !='-'&&ARR[i] !='*'&&ARR[i] !='/'&&ARR[i] !='('&&ARR[i] !=')')//把字符保存在arr[]中
+                {
+                    arr[j] = ARR[i] ;
+                    j++;
+                }
+                else
+                    break;
+                i++;
+            }
+            flag = i ;  //标记读入位置
+            Push( atoi(arr) );//把arr[]字符数组，转化成int型数，入操作数栈
+            for (int i = 0 ;i < 10 ;i++)
+            {
+                arr[i] = 0;
+            }
+        }
+    }
+}
+///////////////////////////创建/////////////////////////
+void A::Create()//初始化运算符栈,并将'='输入进去！
+{
+    optr = new OPTR;
+    optr->top = 0;
+    optr->arr[optr->top] = '=' ;
+
+    opnd = new OPND;//初始化操作数栈！
+    opnd->arr[100] = 0 ;
+    opnd->top = -1;
+}
+///////////////////////////判断栈空/////////////////////////
+int A:: Empty(OPTR *optr)//判断操作数是否栈空
+{
+    if (optr->top == -1)
+        return 1;
+    else
+        return 0;
+}
+int A::Empty(OPND *opnd)//判断运算符是否栈空
+{
+    if (opnd->top == -1)
+        return 1;
+    else
+        return 0;
+}
+///////////////////////////入栈/////////////////////////
+void A::Push(char ch)//运算符入栈
+{
+    optr->top++;
+    optr->arr[optr->top] = ch;
+}
+void A::Push(int num)//操作数入栈
+{
+    opnd->top++;
+    opnd->arr[opnd->top] = num;
+}
+///////////////////////////出栈/////////////////////////
+int A::Pop(char *ch)//运算符出栈
+{
+    *ch = optr->arr[optr->top];
+    optr->top--;
+    return *ch;
+}
+int A::Pop(int *num)//操作数出栈
+{
+    *num = opnd->arr[opnd->top];
+    opnd->top--;
+    return *num;
+}
+///////////////////////////判断优先级/////////////////////////
+int A::bijiao(char ch)
+{
+    int in_temp = 0 , out_temp = 0;
+    switch (ch)//栈外运算符
+    {
+    case '(':out_temp = 6;break;
+    case '+':
+    case '-':out_temp = 1;break;
+    case '*':
+    case '/':out_temp = 3;break;
+    case ')':out_temp = 0;break;
+    case '=':out_temp = -1;break;
+    }
+    switch (optr->arr[optr->top])//OPTR栈顶的运算符
+    {
+    case '(':in_temp = 0;break;
+    case '+':
+    case '-':in_temp = 2;break;
+    case '*':
+    case '/':in_temp = 4;break;
+    case ')':in_temp = 6;break;
+    case '=':in_temp = -2;break;
+    }
+    if (out_temp > in_temp){return 1;}//栈外运算符高返回1，继续入栈；
+    if (out_temp == in_temp){return 0;}//栈外运算符低返回0，进行消括号；
+    if (out_temp < in_temp){return -1;}//栈外运算符低返回-1，进行计算；
+}
+///////////////////////////计算/////////////////////////
+int A::jisuan(int a , int b , char ch)
+{
+        switch (ch)
+        {
+        case '+':return (a + b);
+        case '-':return (a - b);
+        case '*':return (a * b);
+        case '/':return (a / b);
+        }
+}
+///////////////////////////判断是否结束('='遇到'=')//////////////////////
+int A::pankong()
+{
+    if (optr->arr[1] == '=')
+        return 1;
+    else
+        return 0;
+}
+///////////////////////////返回Opnd的栈顶元素（结果）////////////////
+int A::get_opnd_top()
+{
+    return opnd->arr[opnd->top];
+}
+///////////////////////////主函数/////////////////////////
+int main ()
+{
+    A mess;//构造函数中提示输入ARR；
+    mess.Create();
+    mess.load();
+
+    cout<<mess.get_opnd_top()<<endl;
+
+    system ("pause");
+}
+
+
+6.面向对象问题
+
+
+#include<iostream.h>
+class vehicle // 定义汽车类
+{
+protected:
+int wheels; // 车轮数
+float weight; // 重量
+public:
+vehicle(int wheels,float weight);
+int get_wheels();
+float get_weight();
+float wheel_load();
+void show();
+};
+class car:public vehicle // 定义小车类
+{
+int passenger_load; // 载人数
+public:
+car(int wheels,float weight,int passengers=4);
+int get_passengers();
+void show();
+};
+class truck:public vehicle // 定义卡车类
+{
+int passenger_load; // 载人数
+float payload; // 载重量
+public:
+truck(int wheels,float weight,int passengers=2,float max_load=24000.00);
+int get_passengers();
+float efficiency();
+void show();
+};
+vehicle::vehicle(int wheels,float weight)
+{
+vehicle::wheels=wheels;
+vehicle::weight=weight;
+}
+int vehicle::get_wheels()
+{
+return wheels;
+}
+float vehicle::get_weight()
+{
+return weight/wheels;
+}
+void vehicle::show()
+{
+cout << "车轮:" << wheels << "个" << endl;
+cout << "重量:" << weight << "公斤" << endl;
+}
+car::car(int wheels, float weight,
+int passengers) :vehicle (wheels, weight)
+{
+passenger_load=passengers;
+}
+int car::get_passengers ()
+{
+return passenger_load;
+}
+void car::show()
+{
+cout <<" 车型:小车" << endl;
+vehicle::show();
+cout << "载人:" << passenger_load << "人" << endl;
+cout << endl;
+}
+truck:: truck(int wheels, float weight,int passengers, float max_load):vehicle(wheels,weight)
+{
+passenger_load=passengers;
+payload=max_load;
+}
+int truck::get_passengers()
+{
+return passenger_load;
+}
+float truck::efficiency()
+{
+return payload/(payload+weight);
+}
+void truck::show()
+{
+cout <<"车型:卡车" << endl;
+vehicle:: show ();
+cout << "载人:" << passenger_load << "人" << endl;
+cout << "效率:" << efficiency() << endl;
+cout << endl;
+}
+void main ()
+{
+car car1(4,2000,5);
+truck tru1(10,8000,3,340000);
+cout << "输出结果" << endl;
+car1. show ();
+tru1. show ();
+}
+
+
+综合部分：
+
+#include <Windows.h>
+#include <mysql.h>
+#include <iostream>
+#include <iomanip>
+#pragma comment( lib, "libmysql.lib")
+
+using namespace std;
+
+void mysql_test();   //进入学生系统
+void mysql_insert(); //新增学生信息
+void mysql_display();//查看学生信息
+void mysql_delete(); //删除学生信息
+void mysql_modify(); //修改学生信息
+
+MYSQL mysql;
+MYSQL_RES *res;
+MYSQL_ROW row;
+
+int main()
+{
+	while (1)
+	{
+		cout << "**********1.进入学生系统**********" << endl;
+		cout << "**********2.新增学生信息**********" << endl;
+		cout << "**********3.查看学生信息**********" << endl;
+		cout << "**********4.删除学生信息**********" << endl;
+		cout << "**********5.修改学生信息**********" << endl;
+		cout << "**********6.退出******************" << endl;
+		int commond;
+		cout << "请输入命令：";
+		cin >> commond;
+		switch (commond)
+		{
+			case 1:
+			{
+				system("cls"); mysql_test();    break;
+			}
+			case 2:
+			{
+				system("cls"); mysql_insert();  break;
+			}
+			case 3:
+			{
+				system("cls"); mysql_display(); break;
+			}
+			case 4:
+			{
+				system("cls"); mysql_delete();  break;
+			}
+			case 5:
+			{
+				system("cls"); mysql_modify();  break;
+			}
+			case 6:
+			{
+				mysql_close(&mysql); return 0;
+			}
+			default:
+				cout << "请输入正确的指令\n";
+		}
+	}
+	return 0;
+}
+/**********进入学生系统**********/
+void mysql_test()
+{
+	mysql_init(&mysql);
+	if (!mysql_real_connect(&mysql, "localhost", "root", "121915", "student", 3306, NULL, 0))
+		cout << "进入失败，请稍后再试" << endl;
+	else
+		cout << "*******欢迎来到教务管理系统*******" << endl;
+}
+/**********新增学生信息**********/
+void mysql_insert()
+{
+	char stuId[40];       //学号
+	char name[40];      //姓名
+	char age[40];       //年龄
+	char major[40];     //专业
+	char sex[40];       //性别
+    char address[40];    //地址
+	char birth[40];      //生日
+	char telephone[40];  //电话
+	char mail[40];       //邮箱
+	char sqlstr[1024];  //缓冲区
+	cout << "请依次输入学生学号、姓名、年龄、专业、性别、地址、生日、电话、邮箱，并用空格隔开：" << endl;
+	cin >> stuId >> name >> age >> major >> sex >> major >> address >> birth >> telephone >> mail;
+
+	int len = sprintf(sqlstr, "INSERT INTO stu2 (stuId,name,age,sex,major,address,birth,telephone,mail)\
+							  VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s');",stuId,name,major,age,sex,address,birth,telephone,mail);
+	mysql_query(&mysql, sqlstr);
+
+	if (len < 0)
+		cout << "新增数据失败\n";
+	else
+		cout << "新增数据成功\n";
+	mysql_free_result(res);
+}
+/**********查看学生信息**********/
+void mysql_display()
+{	
+	mysql_query(&mysql,"select * from stu2");
+	res = mysql_store_result(&mysql);
+	printf("stuId    name     age      major      sex      address         birth           telephone       mail\n");
+	while (row = mysql_fetch_row(res))
+	{
+		cout << left << setw(9) << row[0];
+		cout << left << setw(9) << row[1];
+		cout << left << setw(9) << row[2];
+		cout << left << setw(9) << row[3];
+		cout << left << setw(9) << row[4];
+		cout << left << setw(16) << row[5];
+		cout << left << setw(16) << row[6];
+		cout << left << setw(16) << row[7];
+		cout << left << setw(16) << row[8];
+		cout << endl;
+		mysql_free_result(res);
+	}
+	
+}
+/**********删除学生信息**********/
+void mysql_delete()
+{
+	char str[40];
+	char sqlstr[1024];
+	cout << "输入要删除的学生学号：";
+	cin >> str;
+	int len = sprintf(sqlstr, "delete from stu2 where stuId=%s", str);
+	mysql_query(&mysql, sqlstr);
+
+	if (len < 0)
+		cout << "删除数据失败\n";
+	else
+		cout << "删除数据成功\n";
+	mysql_free_result(res);
+}
+/**********修改学生信息**********/
+void mysql_modify()
+{
+	int commond;
+	char str[40];
+	char str1[40];
+	char sqlstr[1024];
+
+	cout << "输入要修改的学生学号：";
+	cin >> str;
+	cout << "要修改的内容：1（姓名），2（年龄），3（专业），4（性别），5（地址），6（生日），7（电话），8（邮箱），9(退出）:";
+	cin >> commond;
+	switch (commond)
+	{
+		case 1:
+		{
+			cout << "请输入新的姓名：";
+			cin >> str1;
+			int len = sprintf(sqlstr,"update stu2 set name='%s' where stuId=%s", str1, str);
+			mysql_query(&mysql, sqlstr);
+			if (len < 0)
+				cout << "修改数据失败\n";
+			else
+				cout << "修改数据成功\n";
+			break;
+		}
+		case 2:
+		{
+			cout << "请输入新的年龄：";
+			cin >> str1;
+			int len = sprintf(sqlstr, "update stu2 set age=%s where stuId=%s", str1, str);
+			mysql_query(&mysql, sqlstr);
+			if (len < 0)
+				cout << "修改数据失败\n";
+			else
+				cout << "修改数据成功\n";
+			break;
+		}
+	
+	case 3:
+		{
+			cout << "请输入新的专业：";
+			cin >> str1;
+			int len = sprintf(sqlstr, "update stu2 set major='%s' where stuID=%s", str1, str);
+			mysql_query(&mysql, sqlstr);
+			if (len < 0)
+				cout << "修改数据失败\n";
+			else
+				cout << "修改数据成功\n";
+			break;
+		}
+		case 4:
+		{
+			cout << "请输入新的性别：";
+			cin >> str1;
+			int len = sprintf(sqlstr, "update stu2 set sex='%s' where stuID=%s", str1, str);
+			mysql_query(&mysql, sqlstr);
+			if (len < 0)
+				cout << "修改数据失败\n";
+			else
+				cout << "修改数据成功\n";
+			break;
+		}
+		case 5:
+		{
+			cout << "请输入新的地址：";
+			cin >> str1;
+			int len = sprintf(sqlstr, "update stu2 set address='%s' where stuID=%s", str1, str);
+			mysql_query(&mysql, sqlstr);
+			if (len < 0)
+				cout << "修改数据失败\n";
+			else
+				cout << "修改数据成功\n";
+			break;
+		}
+			case 6:
+		{
+			cout << "请输入新的生日：";
+			cin >> str1;
+			int len = sprintf(sqlstr, "update stu2 set birth='%s' where stuID=%s", str1, str);
+			mysql_query(&mysql, sqlstr);
+			if (len < 0)
+				cout << "修改数据失败\n";
+			else
+				cout << "修改数据成功\n";
+			break;
+		}
+
+		case 7:
+		{
+			cout << "请输入新的电话：";
+			cin >> str1;
+			int len = sprintf(sqlstr, "update stu2 set telephone='%s' where stuID=%s", str1, str);
+			mysql_query(&mysql, sqlstr);
+			if (len < 0)
+				cout << "修改数据失败\n";
+			else
+				cout << "修改数据成功\n";
+			break;
+		}
+		case 8:
+		{
+			cout << "请输入新的邮箱：";
+			cin >> str1;
+			int len = sprintf(sqlstr, "update stu2 set mail='%s' where stuID=%s", str1, str);
+			mysql_query(&mysql, sqlstr);
+			if (len < 0)
+				cout << "修改数据失败\n";
+			else
+				cout << "修改数据成功\n";
+			break;
+		}
+		case 9:
+		{  
+			return;
+		}
+		default:
+			cout << "请输入正确的指令";
+	}
+}
